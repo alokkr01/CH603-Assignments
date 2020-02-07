@@ -1,4 +1,5 @@
 import numpy as np
+from atomic_wt import weights
 
 # reading geom.txt file
 geom=np.genfromtxt('geom.txt',skip_header=1)
@@ -21,9 +22,9 @@ if NATOMS_geom==NATOMS_hess:
 rows=len(hess)
 columns=len(hess[0])
 hessian_matrix=[]
-for i in range(int(rows/3)):
+for i in range(int(rows/NATOMS)):
 	A=[]
-	for j in range(3):
+	for j in range(NATOMS):
 		A.append(hess[(3*i)+j,:])
 		B=np.asarray(A)
 		C=B.flatten()
@@ -32,8 +33,9 @@ np.hm=np.asarray(hessian_matrix)
 
 
 # creating weight factors with atomic weights
-np.atomic_wt=[15.99491461957, 1.00782503223, 1.00782503223]
-np.full_row=np.repeat(np.atomic_wt,3)
+atomic_wt=weights(atomic_no)
+np.full_row=np.repeat(atomic_wt,3)
+
 np.mass=np.zeros((int(3*NATOMS),int(3*NATOMS)))
 for i in range(int(3*NATOMS)):
     for j in range(int(3*NATOMS)):
